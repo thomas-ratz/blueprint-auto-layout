@@ -1705,6 +1705,17 @@ float FBlueprintAutoLayout::EstimatePinY(UEdGraphNode* Node, UEdGraphPin* Pin) c
 	return Y;
 }
 
+// Link two pins and let both owning nodes react, the way a user-drawn wire does. A reroute knot
+// only takes its wire's pin type in PinConnectionListChanged; linked with a bare MakeLinkTo it
+// stays Wildcard, and the next node reconstruction (compile, load) drops its mistyped links.
+static void LinkAndNotify(UEdGraphPin* A, UEdGraphPin* B)
+{
+	if (!A || !B) return;
+	A->MakeLinkTo(B);
+	A->GetOwningNode()->PinConnectionListChanged(A);
+	B->GetOwningNode()->PinConnectionListChanged(B);
+}
+
 UK2Node_Knot* FBlueprintAutoLayout::CreateRoutingKnot(UEdGraph* Graph, int32 X, int32 Y)
 {
 	if (!Graph) return nullptr;
@@ -1757,7 +1768,7 @@ void FBlueprintAutoLayout::RemoveAutoRoutedKnots(UEdGraph* Graph)
 			{
 				if (S && D)
 				{
-					S->MakeLinkTo(D);
+					LinkAndNotify(S, D);
 				}
 			}
 		}
@@ -1786,11 +1797,11 @@ void FBlueprintAutoLayout::MaterializeLaneKnots(UEdGraph* Graph)
 		{
 			UK2Node_Knot* Knot = CreateRoutingKnot(Graph, WP.X, WP.Y);
 			if (!Knot) break;
-			if (UEdGraphPin* KIn = Knot->GetInputPin()) Prev->MakeLinkTo(KIn);
+			if (UEdGraphPin* KIn = Knot->GetInputPin()) LinkAndNotify(Prev, KIn);
 			Prev = Knot->GetOutputPin();
 			if (!Prev) break;
 		}
-		if (Prev) Prev->MakeLinkTo(Dst);
+		if (Prev) LinkAndNotify(Prev, Dst);
 	}
 }
 
@@ -1911,9 +1922,9 @@ void FBlueprintAutoLayout::RerouteWiresAroundObstacles(UEdGraph* Graph)
 			UEdGraphPin* KIn = K->GetInputPin();
 			UEdGraphPin* KOut = K->GetOutputPin();
 			if (!KIn || !KOut) continue;
-			PrevOut->MakeLinkTo(KIn);
+			LinkAndNotify(PrevOut, KIn);
 			PrevOut = KOut;
 		}
-		PrevOut->MakeLinkTo(W.In);
+		LinkAndNotify(PrevOut, W.In);
 	}
 }

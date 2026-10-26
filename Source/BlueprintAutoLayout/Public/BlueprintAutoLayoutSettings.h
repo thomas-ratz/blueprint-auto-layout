@@ -62,11 +62,11 @@ public:
 	 * Route long edges through reroute (knot) nodes (layered engine only). An edge that spans more
 	 * than one column is rewired through knots along its reserved lane so it draws as straight
 	 * segments instead of one curved spline. The knots are tagged and regenerated on each layout, so
-	 * they don't accumulate. Turn off to leave long edges as plain (curved) wires. On by default.
+	 * they don't accumulate. Off by default: every multi-column edge gets knots, which buries data-heavy graphs.
 	 */
 	UPROPERTY(EditAnywhere, config, Category = "Layout Engine",
 		meta = (DisplayName = "Knot-route long edges", EditCondition = "bUseLayeredEngine"))
-	bool bMaterializeLongEdges = true;
+	bool bMaterializeLongEdges = false;
 
 	/**
 	 * How the plain "Auto Layout Graph" / "Auto Layout & Group Graph" actions (and the keyboard

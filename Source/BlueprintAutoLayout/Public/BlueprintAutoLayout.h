@@ -92,7 +92,7 @@ struct FBlueprintLayoutConfig
 	// column gets internal dummy waypoints that reserve a straight lane; turning those into real
 	// reroute (knot) nodes makes the wire render as straight segments through the lane instead of a
 	// single curved spline. The knots are tagged so re-runs remove and regenerate them.
-	bool bMaterializeLongEdges = true;
+	bool bMaterializeLongEdges = false;
 };
 
 /**
