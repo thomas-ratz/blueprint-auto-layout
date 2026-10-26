@@ -1,5 +1,9 @@
 # Blueprint Anti-Pasta
 
+> **Fork notes (thomas-ratz):** this fork drops the vendored ACPDistTools (licence check, HTTP update check, shared launcher menu) and adds a scriptable entry point:
+> - `UBPALLayoutLibrary` (C++/Blueprint/editor Python): `LayoutBlueprintGraph(Blueprint, GraphName)`, `LayoutBlueprint(Blueprint)`, `GetBlueprintGraphNames(Blueprint)`. Same settings as the toolbar's Auto Layout Graph; one undo step per graph.
+> - `BlueprintLayoutTools` (`Content/Python/bpal_toolset`): the same three calls as an Unreal MCP toolset (`layout_graph`, `layout_blueprint`, `list_graphs`). Registered when the ToolsetRegistry plugin is enabled.
+
 *(Formerly Blueprint Auto Layout — blueprint spaghetti met its match.)*
 
 Pin-aware auto-layout for Unreal Engine Blueprint graphs. Press **Ctrl/Cmd+Shift+L** or use the **toolbar dropdown** → the algorithm rearranges your nodes into a readable left-to-right execution flow.
@@ -22,8 +26,6 @@ The engine is implemented from the published papers (Sugiyama et al.; Brandes & 
 ## Actions
 
 Three ways to reach these: the **toolbar combo-dropdown**, **right-click on empty graph space**, or the **keyboard shortcuts** noted below.
-
-The shared **Alex Coulombe Presents** entry point also lists this plugin alongside other installed ACP plugins; its best-effort toolbar-button visibility is unverified.
 
 - **Auto Layout Graph** — arranges the graph (straighten & move by default). Also bound to **Ctrl/Cmd+Shift+L**; the toolbar button runs this by default.
 - **Auto Layout Selected** — arranges only the selected nodes, in place. Also bound to **Ctrl/Cmd+Shift+K**. (Greyed out in the toolbar dropdown when no nodes are selected; omitted entirely from the right-click menu in that case.)

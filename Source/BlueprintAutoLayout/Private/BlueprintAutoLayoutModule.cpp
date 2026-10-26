@@ -4,7 +4,6 @@
 #include "BlueprintAutoLayout.h"
 #include "BlueprintAutoLayoutSettings.h"
 #include "BlueprintAutoLayoutCommands.h"
-#include "ACPDistTools/ACPMenu.h"
 
 #include "BlueprintEditor.h"
 #include "EdGraph/EdGraph.h"
@@ -555,17 +554,6 @@ void FBlueprintAutoLayoutModule::RegisterMenuExtensions()
 
 	// Add the toolbar button to the Blueprint editor's toolbar.
 	RegisterToolbarExtension();
-
-	ACPMenu::RegisterProduct(
-		TEXT("BPAutoLayout"),
-		TEXT("Blueprint Anti-Pasta"),
-		TEXT("BlueprintAutoLayout"),
-		FExecuteAction::CreateLambda([]()
-		{
-			FNotificationInfo Info(LOCTEXT("ACPMenuOpenInfo", "Use Blueprint Anti-Pasta from an open Blueprint editor's toolbar dropdown or by right-clicking empty graph space."));
-			Info.ExpireDuration = 5.0f;
-			FSlateNotificationManager::Get().AddNotification(Info);
-		}));
 }
 
 void FBlueprintAutoLayoutModule::RegisterToolbarExtension()
@@ -782,8 +770,6 @@ void FBlueprintAutoLayoutModule::RegisterToolbarExtension()
 
 void FBlueprintAutoLayoutModule::UnregisterMenuExtensions()
 {
-	ACPMenu::UnregisterProduct(TEXT("BPAutoLayout"));
-
 	if (UObjectInitialized() && UToolMenus::Get())
 	{
 		UToolMenus::Get()->UnregisterOwnerByName(GAutoLayoutOwnerName);
